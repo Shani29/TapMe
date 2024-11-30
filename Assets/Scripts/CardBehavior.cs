@@ -35,6 +35,7 @@ public class CardBehaviour : MonoBehaviour
 
     public void Flip() {
         turning=true;
+        AudioPlayer.Instance.PlayAudio(0);
         StartCoroutine(Flip90(transform, 0.25f, true));
     }
 
@@ -42,8 +43,8 @@ public class CardBehaviour : MonoBehaviour
         if (spriteID==-1||img==null)
             return;
         img.sprite=flipped
-            ? GameManager.Instance.GetSprite(spriteID)
-            : GameManager.Instance.CardBack();
+            ? GameController.Instance.GetSprite(spriteID)
+            : GameController.Instance.CardBack();
     }
 
     public void Inactive() {
@@ -99,7 +100,7 @@ public class CardBehaviour : MonoBehaviour
     }
 
     public void CardBtn() {
-        if (flipped||turning||!GameManager.Instance.CanClick())
+        if (flipped||turning||!GameController.Instance.CanClick())
             return;
         Flip();
         StartCoroutine(SelectionEvent());
@@ -107,6 +108,6 @@ public class CardBehaviour : MonoBehaviour
 
     private IEnumerator SelectionEvent() {
         yield return new WaitForSeconds(0.5f);
-        GameManager.Instance.CardClicked(spriteID, id);
+        GameController.Instance.CardClicked(spriteID, id);
     }
 }

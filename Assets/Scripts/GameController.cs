@@ -2,9 +2,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour
+public class GameController : MonoBehaviour
 {
-    public static GameManager Instance;
+    public static GameController Instance;
     public static int gameSizeX = 2;
     public static int gameSizeY = 2;
 
@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Slider sizeSliderX;
     [SerializeField] private Slider sizeSliderY;
     [SerializeField] private GameObject LoadGameButton;
-    [SerializeField] private Text timeLabel_infoPanel;
 
     private float time;
     private int spriteSelectedId;
@@ -183,11 +182,13 @@ public class GameManager : MonoBehaviour
                 cards[cardSelectedIndex].Inactive();
                 cards[cardIndex].Inactive();
                 cardLeft-=2;
-                
+                if (!CheckGameWin())
+                    AudioPlayer.Instance.PlayAudio(2);
             }
             else {
                 cards[cardSelectedIndex].Flip();
                 cards[cardIndex].Flip();
+                AudioPlayer.Instance.PlayAudio(3);
             }
             cardSelectedIndex=spriteSelectedId=-1;
         }
@@ -196,6 +197,7 @@ public class GameManager : MonoBehaviour
     private bool CheckGameWin() {
         if (cardLeft==0) {
             DisplayInfo();
+            AudioPlayer.Instance.PlayAudio(1);
             return true;
         }
         return false;
@@ -267,7 +269,6 @@ public class GameManager : MonoBehaviour
     public void DisplayInfo() {
         gameStart=false;
         info.SetActive(true);
-        timeLabel_infoPanel.text=$"{time}s";
         SaveLoadManger.Instance.ClearData();
         Invoke(nameof(EndGame), 3f);
     }
