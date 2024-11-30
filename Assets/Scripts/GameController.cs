@@ -15,12 +15,17 @@ public class GameController : MonoBehaviour
     private CardBehaviour[] cards;
     [SerializeField] private GameObject menu;
     [SerializeField] private GameObject panel;
-    [SerializeField] private GameObject info;
+    [SerializeField] private GameObject ResultPanel;
     [SerializeField] private GameObject cardFloor;
     [SerializeField] private Text sizeLabel;
     [SerializeField] private Slider sizeSliderX;
     [SerializeField] private Slider sizeSliderY;
     [SerializeField] private GameObject LoadGameButton;
+    [SerializeField] private Text Score;
+    [SerializeField] private Text EndScore;
+
+    private int _score;
+
 
     private float time;
     private int spriteSelectedId;
@@ -40,14 +45,14 @@ public class GameController : MonoBehaviour
     void ShowMenu() {
         LoadGameButton.SetActive(CanShowLoadButton());
         panel.SetActive(false);
-        info.SetActive(false);
+        ResultPanel.SetActive(false);
         menu.SetActive(true);
     }
 
     void ShowGamePanel() {
         menu.SetActive(false);
         panel.SetActive(true);
-        info.SetActive(false);
+        ResultPanel.SetActive(false);
     }
 
     public void StartCardGame() {
@@ -179,12 +184,14 @@ public class GameController : MonoBehaviour
         }
         else {
             if (spriteSelectedId==spriteId) {
+                _score=_score+10;
+                Score.text=_score.ToString();
                 cards[cardSelectedIndex].Inactive();
                 cards[cardIndex].Inactive();
                 cardLeft-=2;
                 if (!CheckGameWin())
                     AudioPlayer.Instance.PlayAudio(2);
-            }
+                }
             else {
                 cards[cardSelectedIndex].Flip();
                 cards[cardIndex].Flip();
@@ -196,7 +203,7 @@ public class GameController : MonoBehaviour
 
     private bool CheckGameWin() {
         if (cardLeft==0) {
-            DisplayInfo();
+            DisplayResult();
             AudioPlayer.Instance.PlayAudio(1);
             return true;
         }
@@ -266,10 +273,11 @@ public class GameController : MonoBehaviour
 
     public bool CanShowLoadButton() => SaveLoadManger.Instance.CanLoad();
 
-    public void DisplayInfo() {
+    public void DisplayResult() {
         gameStart=false;
-        info.SetActive(true);
+        ResultPanel.SetActive(true);
+        EndScore.text="Score: "+Score.text;
         SaveLoadManger.Instance.ClearData();
-        Invoke(nameof(EndGame), 3f);
+        Invoke(nameof(EndGame), 2f);
     }
 }
