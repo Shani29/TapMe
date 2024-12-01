@@ -8,11 +8,11 @@ public class GameController : MonoBehaviour
     public static int gameSizeX = 2;
     public static int gameSizeY = 2;
 
+    private CardBehaviour[] cards;
     [SerializeField] private GameObject prefab;
     [SerializeField] private GameObject cardList;
     [SerializeField] private Sprite cardBack;
     [SerializeField] private Sprite[] sprites;
-    private CardBehaviour[] cards;
     [SerializeField] private GameObject menu;
     [SerializeField] private GameObject panel;
     [SerializeField] private GameObject ResultPanel;
@@ -24,14 +24,13 @@ public class GameController : MonoBehaviour
     [SerializeField] private Text Score;
     [SerializeField] private Text EndScore;
 
-    private int _score;
-
-
     private float time;
     private int spriteSelectedId;
     private int cardSelectedIndex;
     private int cardLeft;
     private bool gameStart;
+    private int _score;
+
 
     void Awake() {
         Instance=this;
@@ -185,7 +184,7 @@ public class GameController : MonoBehaviour
         else {
             if (spriteSelectedId==spriteId) {
                 _score=_score+10;
-                Score.text=_score.ToString();
+                Score.text= "Score: " + _score.ToString();
                 cards[cardSelectedIndex].Inactive();
                 cards[cardIndex].Inactive();
                 cardLeft-=2;
@@ -276,7 +275,7 @@ public class GameController : MonoBehaviour
     public void DisplayResult() {
         gameStart=false;
         ResultPanel.SetActive(true);
-        EndScore.text="Score: "+Score.text;
+        EndScore.text=Score.text;
         SaveLoadManger.Instance.ClearData();
         Invoke(nameof(EndGame), 2f);
     }

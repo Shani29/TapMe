@@ -11,10 +11,10 @@ public class CardBehaviour : MonoBehaviour
     private bool isInactive;
     [SerializeField] private Image img;
 
-    private IEnumerator Flip90(Transform thisTransform, float time, bool changeSprite) {
+    private IEnumerator Flip180(Transform thisTransform, float time, bool changeSprite) {
         Quaternion startRotation = thisTransform.rotation;
-        Quaternion endRotation = thisTransform.rotation*Quaternion.Euler(0, 90, 0);
-        float rate = 1.0f/time;
+        Quaternion endRotation = thisTransform.rotation*Quaternion.Euler(0, 180, 0);
+        float rate = 2.0f/time;
         float t = 0.0f;
 
         while (t<1.0f) {
@@ -26,7 +26,7 @@ public class CardBehaviour : MonoBehaviour
         if (changeSprite) {
             flipped=!flipped;
             ChangeSprite();
-            StartCoroutine(Flip90(transform, time, false));
+            StartCoroutine(Flip180(transform, time, false));
         }
         else {
             turning=false;
@@ -36,7 +36,7 @@ public class CardBehaviour : MonoBehaviour
     public void Flip() {
         turning=true;
         AudioPlayer.Instance.PlayAudio(0);
-        StartCoroutine(Flip90(transform, 0.25f, true));
+        StartCoroutine(Flip180(transform, 0.25f, true));
     }
 
     private void ChangeSprite() {
@@ -95,7 +95,7 @@ public class CardBehaviour : MonoBehaviour
     }
 
     public void ResetRotation() {
-        transform.rotation=Quaternion.Euler(0, 180, 0);
+        transform.rotation=Quaternion.Euler(0, 360, 0);
         flipped=true;
     }
 
